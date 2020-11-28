@@ -1,0 +1,23 @@
+{
+  "name": "twbot",
+  "version": "1.0.0",
+  "description": "Twitter bot that posts daily cat pics - made with Node.js",
+  "main": "server.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "node server.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/jmccormack30/TwBot.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/jmccormack30/TwBot/issues"
+  },
+  "homepage": "https://github.com/jmccormack30/TwBot#readme",
+  "dependencies": {
+    "twit": "^2.2.11"
+  }
+}

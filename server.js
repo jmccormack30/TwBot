@@ -68,4 +68,4 @@ uploadImage(images);
 const hourInterval = 24;
 
 // Tweet every X hours
-setInterval(uploadImage(images), (1000 * 60 * 60 * hourInterval));
+setInterval(() => uploadImage(images), (1000 * 60 * 60 * hourInterval));

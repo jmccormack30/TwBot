@@ -35,5 +35,3 @@ function createImagesJsonFile(folderName) {
 			});
 	}
 }
-
-createImagesJsonFile('images');

@@ -15,6 +15,7 @@ function getImage(images, index) {
 }
 
 function uploadImage(images){
+	printDate();
 	console.log('Loading an image.');
 	var index = getRandomIndex(images);
 	var fileName = getImage(images, index);
@@ -53,14 +54,44 @@ function deleteImage(fileName, index) {
     		console.error(err);
     		return;
   		} else {
-  			console.log('Deleted image: ' + fileName.toString());
+  			console.log('Deleted image: ' + fileName.toString() + '\n');
   		}
 	});
 	// Delete image entry from json
 	images.splice(index, 1);
 }
 
-console.log('TwBot is running...');
+function printDate() {
+	var datetime = new Date();
+	var day = datetime.getDate();
+	var month = datetime.getMonth()+1;
+	var year = datetime.getFullYear();
+	var dateString = month + '-' + day + '-' + year;
+	var hour = datetime.getHours();
+	var minuteStr = datetime.getMinutes().toString();
+
+	var period = '';
+	if (hour < 12 || hour == 24) {
+		period = 'AM';
+	} else {
+		period = 'PM';
+	}
+
+	if (hour == 0 || hour == 24) {
+		hour = 12;
+	} else if (hour > 12 && hour < 24) {
+		hour = hour - 12;
+	}
+
+	if (minuteStr.length == 1) {
+		minuteStr = '0' + minuteStr;
+	}
+
+	var timeString = hour + ':' + minuteStr + ' ' + period;
+	console.log(dateString + ' ' + timeString);
+}
+
+console.log('TwBot is running...\n');
 
 // Run once to tweet on startup
 uploadImage(images);

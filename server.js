@@ -91,12 +91,37 @@ function printDate() {
 	console.log(dateString + ' ' + timeString);
 }
 
-console.log('TwBot is running...\n');
+// console.log('TwBot is running...\n');
 
-// Run once to tweet on startup
-uploadImage(images);
+// // Run once to tweet on startup
+// uploadImage(images);
 
-const hourInterval = 24;
+// const hourInterval = 24;
 
-// Tweet every X hours
-setInterval(() => uploadImage(images), (1000 * 60 * 60 * hourInterval));
+// // Tweet every X hours
+// setInterval(() => uploadImage(images), (1000 * 60 * 60 * hourInterval));
+
+var nodemailer = require('nodemailer');
+
+var transporter = nodemailer.createTransport({
+  service: 'gmail',
+  auth: {
+    user: 'youremail@gmail.com',
+    pass: 'yourpassword'
+  }
+});
+
+var mailOptions = {
+  from: 'youremail@gmail.com',
+  to: 'myfriend@yahoo.com',
+  subject: 'Sending Email using Node.js',
+  text: 'That was easy!'
+};
+
+transporter.sendMail(mailOptions, function(error, info){
+  if (error) {
+    console.log(error);
+  } else {
+    console.log('Email sent: ' + info.response);
+  }
+});

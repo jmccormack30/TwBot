@@ -1,5 +1,3 @@
-console.log('Twitter bot is running..');
-
 var fs = require('fs'),
 	path = require('path'),
 	Twit = require('twit'),
@@ -55,24 +53,12 @@ function deleteImage(fileName) {
 	});
 }
 
-function renameImages(folderName) {
-	const files = fs.readdirSync(path.join(__dirname, '/' + folderName + '/'));
-	var i = 1;
-	for (const file of files) {
-		var stringNum = i.toString();
-		var numZeros = (4 - stringNum.length);
-		var newFileName = "";
-		for (var x = 0; x < numZeros; x++) {
-			newFileName += "0";
-		}
-		newFileName += i;
-		fs.rename(
-	  		__dirname + '/' + folderName + '/' + file,
-	  		__dirname + '/' + folderName + '/' + newFileName + '.jpg',
-	  		err => {
-	    		console.log(err);
-	  		}
-		);
-		i += 1;
-	}
-}
+console.log('TwBot is running...');
+
+// Run once to tweet on startup
+uploadImage(images);
+
+const hourInterval = 24;
+
+// Tweet every X hours
+setInterval(uploadImage(images), (1000 * 60 * 60 * hourInterval));

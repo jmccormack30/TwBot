@@ -6,7 +6,7 @@ var fs = require('fs'),
 	images = require(path.join(__dirname, 'images.js')),
 	config = require(path.join(__dirname, 'config.js'));
 
-var T = new Twit(config)
+var T = new Twit(config);
 
 function getRandomImage(images) {
 	var obj = images[Math.floor(Math.random() * images.length)];
@@ -16,10 +16,9 @@ function getRandomImage(images) {
 function uploadImage(images){
 	console.log('Loading an image.');
 	var fileName = getRandomImage(images);
-	console.log('Loaded image: ' + fileName.toString())
+	console.log('Loaded image: ' + fileName.toString());
 	var imagePath = path.join(__dirname, '/images/' + fileName),
     	b64content = fs.readFileSync(imagePath, { encoding: 'base64' });
-
 	console.log('Uploading an image...');
 	T.post('media/upload', { media_data: b64content }, function (err, data, response) {
     	if (err) {
@@ -48,16 +47,16 @@ function uploadImage(images){
 function deleteImage(fileName) {
 	fs.unlink(path.join(__dirname, '/images/' + fileName), (err) => {
   		if (err) {
-    		console.error(err)
-    		return
+    		console.error(err);
+    		return;
   		} else {
   			console.log('Deleted image: ' + fileName.toString());
   		}
 	});
 }
 
-function renameImages() {
-	const files = fs.readdirSync(path.join(__dirname, '/backup_images/'))
+function renameImages(folderName) {
+	const files = fs.readdirSync(path.join(__dirname, '/' + folderName + '/'));
 	var i = 1;
 	for (const file of files) {
 		var stringNum = i.toString();
@@ -68,15 +67,12 @@ function renameImages() {
 		}
 		newFileName += i;
 		fs.rename(
-	  		__dirname + '/backup_images/' + file,
-	  		__dirname + '/backup_images/' + newFileName + '.jpg',
+	  		__dirname + '/' + folderName + '/' + file,
+	  		__dirname + '/' + folderName + '/' + newFileName + '.jpg',
 	  		err => {
-	    		console.log(err)
+	    		console.log(err);
 	  		}
-		)
+		);
 		i += 1;
 	}
 }
-
-renameImages();
-// uploadImage(images);

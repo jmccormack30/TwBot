@@ -1,3 +1,6 @@
+var fs = require('fs'),
+	path = require('path');
+
 function renameImages(folderName) {
 	const files = fs.readdirSync(path.join(__dirname, '/' + folderName + '/'));
 	var i = 1;
@@ -19,3 +22,18 @@ function renameImages(folderName) {
 		i += 1;
 	}
 }
+
+function createImagesJsonFile(folderName) {
+	const files = fs.readdirSync(path.join(__dirname, '/' + folderName + '/'));
+	for (const file of files) {
+		var fileName = file.toString();
+		fs.appendFileSync(
+			'test.txt',
+			"{\n\tfile: '" + fileName + "'\n},\n",
+			err => {
+				console.log(err);
+			});
+	}
+}
+
+createImagesJsonFile('images');

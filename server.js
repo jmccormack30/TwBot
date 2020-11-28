@@ -6,14 +6,18 @@ var fs = require('fs'),
 
 var T = new Twit(config);
 
-function getRandomImage(images) {
-	var obj = images[Math.floor(Math.random() * images.length)];
-	return obj.file.toString();
+function getRandomIndex(images) {
+	return Math.floor(Math.random() * images.length);
+}
+
+function getImage(images, index) {
+	return images[index].file.toString();
 }
 
 function uploadImage(images){
 	console.log('Loading an image.');
-	var fileName = getRandomImage(images);
+	var index = getRandomIndex(images);
+	var fileName = getImage(images, index);
 	console.log('Loaded image: ' + fileName.toString());
 	var imagePath = path.join(__dirname, '/images/' + fileName),
     	b64content = fs.readFileSync(imagePath, { encoding: 'base64' });
@@ -34,7 +38,7 @@ function uploadImage(images){
             			console.log(err);
           			} else {
             			console.log('Posted an image!');
-            			deleteImage(fileName);
+            			deleteImage(fileName, index);
           			}
         		}
         	);
@@ -42,7 +46,8 @@ function uploadImage(images){
   	});
 }
 
-function deleteImage(fileName) {
+function deleteImage(fileName, index) {
+	// Delete image file from directory
 	fs.unlink(path.join(__dirname, '/images/' + fileName), (err) => {
   		if (err) {
     		console.error(err);
@@ -51,6 +56,8 @@ function deleteImage(fileName) {
   			console.log('Deleted image: ' + fileName.toString());
   		}
 	});
+	// Delete image entry from json
+	images.splice(index, 1);
 }
 
 console.log('TwBot is running...');

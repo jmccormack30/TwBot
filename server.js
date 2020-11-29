@@ -1,7 +1,9 @@
 var fs = require('fs'),
 	path = require('path'),
 	Twit = require('twit'),
+	nodemailer = require('nodemailer'),
 	images = require(path.join(__dirname, 'images.js')),
+	email = require(path.join(__dirname, 'email.js')),
 	config = require(path.join(__dirname, 'config.js'));
 
 var T = new Twit(config);
@@ -27,6 +29,7 @@ function uploadImage(images){
     	if (err) {
       		console.log('ERROR:');
       		console.log(err);
+      		sendErrorEmail();
     	} else {
       		console.log('Image uploaded!');
       		console.log('Now tweeting it...');
@@ -37,6 +40,7 @@ function uploadImage(images){
           			if (err) {
             			console.log('ERROR:');
             			console.log(err);
+            			sendErrorEmail();
           			} else {
             			console.log('Posted an image!');
             			deleteImage(fileName, index);
@@ -52,6 +56,7 @@ function deleteImage(fileName, index) {
 	fs.unlink(path.join(__dirname, '/images/' + fileName), (err) => {
   		if (err) {
     		console.error(err);
+    		sendErrorEmail();
     		return;
   		} else {
   			console.log('Deleted image: ' + fileName.toString() + '\n');
@@ -89,6 +94,32 @@ function printDate() {
 
 	var timeString = hour + ':' + minuteStr + ' ' + period;
 	console.log(dateString + ' ' + timeString);
+}
+
+function sendErrorEmail() {
+	var emailData = email[0];
+	var transporter = nodemailer.createTransport({
+  		service: 'gmail',
+ 		auth: {
+    		user: emailData.address.toString(),
+    		pass: emailData.password.toString()
+  		}
+	});
+
+	var mailOptions = {
+  		from: emailData.from.toString(),
+  		to: emailData.to.toString(),
+  		subject: emailData.subject.toString(),
+  		text: emailData.text.toString()
+	};
+
+	transporter.sendMail(mailOptions, function(error, info) {
+  		if (error) {
+    		console.log(error);
+  		} else {
+    		console.log('Email sent: ' + info.response);
+  		}
+	});
 }
 
 console.log('TwBot is running...\n');

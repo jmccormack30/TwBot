@@ -18,6 +18,7 @@
   },
   "homepage": "https://github.com/jmccormack30/TwBot#readme",
   "dependencies": {
-    "twit": "^2.2.11"
+    "twit": "^2.2.11",
+    "nodemailer": "^6.4.16"
   }
 }

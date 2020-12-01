@@ -1,7 +1,6 @@
 var fs = require('fs'),
 	path = require('path'),
 	Twit = require('twit'),
-	twitter = require('twitter'),
 	nodemailer = require('nodemailer'),
 	images = require(path.join(__dirname, 'images.js')),
 	email = require(path.join(__dirname, 'email.js')),

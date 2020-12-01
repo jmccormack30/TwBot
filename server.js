@@ -1,9 +1,11 @@
 var fs = require('fs'),
 	path = require('path'),
 	Twit = require('twit'),
+	twitter = require('twitter'),
 	nodemailer = require('nodemailer'),
 	images = require(path.join(__dirname, 'images.js')),
 	email = require(path.join(__dirname, 'email.js')),
+	dates = require(path.join(__dirname, 'dates.js')),
 	config = require(path.join(__dirname, 'config.js'));
 
 var T = new Twit(config);
@@ -122,12 +124,54 @@ function sendErrorEmail() {
 	});
 }
 
+function checkForTweet() {
+	T.get('statuses/user_timeline', { screen_name: 'SerPounce2'}, function(err, data) {
+		if (!err) {
+			date_dict = dates[0];
+			// Twitter returns created date in UTC
+			var newest = data[0];
+			var tweet_date = newest.created_at;
+			var split_tweet_date = tweet_date.split(" ");
+			var tweetYear = split_tweet_date[5];
+			var tweetMonth = date_dict[split_tweet_date[1]];
+			var tweetDay = split_tweet_date[2];
+			var tweetTime = split_tweet_date[3].split(":");
+			var tweetHour = tweetTime[0];
+			var tweetMinute = tweetTime[1];
+
+			// Get current date in UTC 
+			var current_date = new Date().toUTCString();
+			var split_current_date = current_date.split(" ");
+			var currentYear = split_current_date[3];
+			var currentMonth = date_dict[split_current_date[2]];
+			var currentDay = split_current_date[1];
+			var currentTime = split_current_date[4].split(":");
+			var currentHour = currentTime[0];
+			var currentMinute = currentTime[1];
+
+			// Create the JavaScript date objects
+			var d1 = new Date(parseInt(tweetYear), parseInt(tweetMonth), parseInt(tweetDay), parseInt(tweetHour), parseInt(tweetMinute));
+			var d2 = new Date(parseInt(currentYear), parseInt(currentMonth), parseInt(currentDay), parseInt(currentHour), parseInt(currentMinute));
+
+			// Calculates the # of hours since last tweet
+			var deltaTime = Math.abs(d1.getTime() - d2.getTime());
+			var deltaHours = deltaTime / (1000*60*60);
+
+			if (deltaHours >= 24) {
+				console.log("It has been 24 hours.. time to tweet!");
+				uploadImages(images);
+			}
+		} else {
+			console.log(err);
+			console.log("ERROR");
+			sendErrorEmail();
+		}
+	});
+}
+
 console.log('TwBot is running...\n');
 
-// Run once to tweet on startup
-uploadImage(images);
+const minuteInterval = 5;
 
-const hourInterval = 24;
-
-// Tweet every X hours
-setInterval(() => uploadImage(images), (1000 * 60 * 60 * hourInterval));
+// Check every X minutes
+setInterval(() => checkForTweet(), (1000 * 60 * minuteInterval));

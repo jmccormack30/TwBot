@@ -158,7 +158,7 @@ function checkForTweet() {
 
 			if (deltaHours >= 24) {
 				console.log("It has been 24 hours.. time to tweet!");
-				uploadImages(images);
+				uploadImage(images);
 			}
 		} else {
 			console.log(err);
